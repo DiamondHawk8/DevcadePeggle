@@ -10,7 +10,11 @@ namespace DevcadePeggle
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
-		
+        private Launcher launcher;
+        //Stores background
+        Texture2D backgroundTexture;
+        
+
 		/// <summary>
 		/// Stores the window dimensions in a rectangle object for easy use
 		/// </summary>
@@ -50,9 +54,15 @@ namespace DevcadePeggle
 			
 			// TODO: Add your initialization logic here
 
-			windowSize = GraphicsDevice.Viewport.Bounds;
-			
-			base.Initialize();
+
+            _graphics.PreferredBackBufferWidth = 1080;
+            _graphics.PreferredBackBufferHeight = 2560;
+            _graphics.ApplyChanges();
+
+            //Launcher Intialization
+            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2160); 
+            launcher = new Launcher(launcherPosition);
+            base.Initialize();
 		}
 
 		/// <summary>
@@ -62,14 +72,16 @@ namespace DevcadePeggle
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
-			// ex:
-			// texture = Content.Load<Texture2D>("fileNameWithoutExtension");
-		}
+            backgroundTexture = Content.Load<Texture2D>("TempBG");
+            launcher.LoadContent(Content); // load content in the created launcher object with MonoGames ContentManager instance
 
-		/// <summary>
-		/// Your main update loop. This runs once every frame, over and over.
-		/// </summary>
+			 
+            // TODO: use this.Content to load your game content here
+            // ex:
+            // texture = Content.Load<Texture2D>("fileNameWithoutExtension");
+        }
+
+		
 		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
 		protected override void Update(GameTime gameTime)
 		{
@@ -100,9 +112,9 @@ namespace DevcadePeggle
 			
 			// Batches all the draw calls for this frame, and then performs them all at once
 			_spriteBatch.Begin();
-			// TODO: Add your drawing code here
-			
-			_spriteBatch.End();
+            _spriteBatch.Draw(backgroundTexture, new Vector2(0, 0), Color.White);
+			launcher.Draw(_spriteBatch);
+            _spriteBatch.End();
 
 			base.Draw(gameTime);
 		}

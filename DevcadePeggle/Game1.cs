@@ -9,8 +9,13 @@ namespace DevcadePeggle
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Launcher launcher;
         private Texture2D backgroundTexture; // Stores background
+
+        // class instances 
+
+        private Launcher launcher;
+        private Ball ball;
+        
 
         public Game1()
         {
@@ -37,6 +42,9 @@ namespace DevcadePeggle
             Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2460);
             launcher = new Launcher(launcherPosition);
 
+            // Ball Initialization
+            ball = new Ball();
+
             base.Initialize();
         }
 
@@ -44,9 +52,13 @@ namespace DevcadePeggle
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load background texture and launcher content
+            // Load background texture
             backgroundTexture = Content.Load<Texture2D>("TempBG");
+
+            // Class loading
             launcher.LoadContent(Content);
+            ball.LoadContent(Content);
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -69,6 +81,7 @@ namespace DevcadePeggle
             _spriteBatch.Begin();
             _spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White); // Use Vector2.Zero for drawing at origin
             launcher.Draw(_spriteBatch);
+            ball.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

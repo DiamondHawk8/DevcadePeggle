@@ -61,9 +61,14 @@ public class Launcher
         spriteBatch.Draw(currentTexture, Position, null, Color.White, Angle, origin, scale, SpriteEffects.None, 0f);
     }
 
-    // Helper method for swapping texture
-    public void ToggleLauncherState()
+
+        
+    
+    public void FireBall()
     {
+        if (ball.IsActive) return; // Prevent firing if a ball is already active
+
+        // swaps texture
         if (currentTexture == loadedTexture)
         {
             currentTexture = unloadedTexture;
@@ -72,7 +77,11 @@ public class Launcher
         {
             currentTexture = loadedTexture;
         }
-    }
 
+        float launchSpeed = 20f; 
+        ball.Velocity = new Vector2((float)Math.Cos(launcher.Angle) * launchSpeed, (float)Math.Sin(launcher.Angle) * launchSpeed);
+        ball.Position = launcher.Position; 
+        ball.IsActive = true;
+    }
 }
 

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 public class Launcher
 {
@@ -11,17 +12,21 @@ public class Launcher
     private const float MaxAngle = MathHelper.PiOver2; // 90 degrees
     private const float MinAngle = -MathHelper.PiOver2; // -90 degrees
 
-    //textures to represent state of the launcher
+    // Textures to represent state of the launcher
     private Texture2D loadedTexture;
     private Texture2D unloadedTexture;
     private Texture2D currentTexture; // This will point to the texture currently being used.
 
+    // Ball object reference for use in FireBall method
+    private Ball ball;
+
 
     private float scale = 0.5f; // Scale factor for the launcher texture
 
-    public Launcher(Vector2 position)
+    public Launcher(Vector2 position, Ball ball)
     {
         Position = position;
+        this.ball = ball;
         Angle = 0; // Initial angle pointing straight up
     }
 
@@ -48,7 +53,7 @@ public class Launcher
 
         if (kstate.IsKeyDown(Keys.Space)) // Assuming space bar is used to fire
         {
-            ToggleLauncherState();
+            FireBall();
             // Include logic to "fire" the ball here.
         }
     }
@@ -79,8 +84,8 @@ public class Launcher
         }
 
         float launchSpeed = 20f; 
-        ball.Velocity = new Vector2((float)Math.Cos(launcher.Angle) * launchSpeed, (float)Math.Sin(launcher.Angle) * launchSpeed);
-        ball.Position = launcher.Position; 
+        ball.Velocity = new Vector2((float)Math.Cos(this.Angle) * launchSpeed, (float)Math.Sin(this.Angle) * launchSpeed);
+        ball.Position = this.Position; 
         ball.IsActive = true;
     }
 }

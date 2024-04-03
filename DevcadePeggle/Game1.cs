@@ -38,12 +38,14 @@ namespace DevcadePeggle
 #endif
             _graphics.ApplyChanges();
 
-            // Launcher Initialization
-            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2460);
-            launcher = new Launcher(launcherPosition);
-
             // Ball Initialization
             ball = new Ball();
+
+            // Launcher Initialization
+            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2460);
+            launcher = new Launcher(launcherPosition, ball);
+
+            
 
             base.Initialize();
         }

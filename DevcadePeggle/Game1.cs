@@ -3,120 +3,82 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
 
-// MAKE SURE YOU RENAME ALL PROJECT FILES FROM DevcadeGame TO YOUR YOUR GAME NAME
 namespace DevcadePeggle
 {
-	public class Game1 : Game
-	{
-		private GraphicsDeviceManager _graphics;
-		private SpriteBatch _spriteBatch;
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
         private Launcher launcher;
-        //Stores background
-        Texture2D backgroundTexture;
-        
+        private Texture2D backgroundTexture; // Stores background
 
-		/// <summary>
-		/// Stores the window dimensions in a rectangle object for easy use
-		/// </summary>
-		private Rectangle windowSize;
-		
-		/// <summary>
-		/// Game constructor
-		/// </summary>
-		public Game1()
-		{
-			_graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
-			IsMouseVisible = false;
-		}
-
-		/// <summary>
-		/// Performs any setup that doesn't require loaded content before the first frame.
-		/// </summary>
-		protected override void Initialize()
-		{
-			// Sets up the input library
-			Input.Initialize();
-			//Persistence.Init(); Uncomment if using the persistence section for save and load
-
-			// Set window size if running debug (in release it will be fullscreen)
-			#region
-#if DEBUG
-			_graphics.PreferredBackBufferWidth = 420;
-			_graphics.PreferredBackBufferHeight = 980;
-			_graphics.ApplyChanges();
-#else
-			_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-			_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-			_graphics.ApplyChanges();
-#endif
-			#endregion
-			
-			// TODO: Add your initialization logic here
-
-
-            _graphics.PreferredBackBufferWidth = 1080;
-            _graphics.PreferredBackBufferHeight = 2560;
-            _graphics.ApplyChanges();
-
-            //Launcher Intialization
-            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2160); 
-            launcher = new Launcher(launcherPosition);
-            base.Initialize();
-		}
-
-		/// <summary>
-		/// Performs any setup that requires loaded content before the first frame.
-		/// </summary>
-		protected override void LoadContent()
-		{
-			_spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            backgroundTexture = Content.Load<Texture2D>("TempBG");
-            launcher.LoadContent(Content); // load content in the created launcher object with MonoGames ContentManager instance
-
-			 
-            // TODO: use this.Content to load your game content here
-            // ex:
-            // texture = Content.Load<Texture2D>("fileNameWithoutExtension");
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = false; // Consider setting true for debugging purposes
         }
 
-		
-		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
-		protected override void Update(GameTime gameTime)
-		{
-			Input.Update(); // Updates the state of the input library
+        protected override void Initialize()
+        {
+            Input.Initialize(); // Initialize input, remove if unused
 
-			// Exit when both menu buttons are pressed (or escape for keyboard debugging)
-			// You can change this but it is suggested to keep the keybind of both menu
-			// buttons at once for a graceful exit.
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape) ||
-				(Input.GetButton(1, Input.ArcadeButtons.Menu) &&
-				Input.GetButton(2, Input.ArcadeButtons.Menu)))
-			{
-				Exit();
-			}
+            // Standard resolution setup for debug and release modes
+#if DEBUG
+            _graphics.PreferredBackBufferWidth = 420; // Debug mode width
+            _graphics.PreferredBackBufferHeight = 980; // Debug mode height
+#else
+            _graphics.PreferredBackBufferWidth = 1080; // Standard width for release
+            _graphics.PreferredBackBufferHeight = 2560; // Standard height for release
+#endif
+            _graphics.ApplyChanges();
 
-			// TODO: Add your update logic here
+            // Launcher Initialization
+            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 50);
+            launcher = new Launcher(launcherPosition);
 
-			base.Update(gameTime);
-		}
+            base.Initialize();
+        }
 
-		/// <summary>
-		/// Your main draw loop. This runs once every frame, over and over.
-		/// </summary>
-		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
-		protected override void Draw(GameTime gameTime)
-		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
-			
-			// Batches all the draw calls for this frame, and then performs them all at once
-			_spriteBatch.Begin();
-            _spriteBatch.Draw(backgroundTexture, new Vector2(0, 0), Color.White);
-			launcher.Draw(_spriteBatch);
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Load background texture and launcher content
+            backgroundTexture = Content.Load<Texture2D>("TempBG");
+            launcher.LoadContent(Content);
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if (GameShouldExit())
+            {
+                Exit();
+            }
+
+            // Update game logic here
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White); // Use Vector2.Zero for drawing at origin
+            launcher.Draw(_spriteBatch);
             _spriteBatch.End();
 
-			base.Draw(gameTime);
-		}
-	}
+            base.Draw(gameTime);
+        }
+
+        private bool GameShouldExit()
+        {
+            // Simplifies the exiting logic check
+            var kbState = Keyboard.GetState();
+            return kbState.IsKeyDown(Keys.Escape) ||
+                   (Input.GetButton(1, Input.ArcadeButtons.Menu) && Input.GetButton(2, Input.ArcadeButtons.Menu));
+        }
+    }
 }

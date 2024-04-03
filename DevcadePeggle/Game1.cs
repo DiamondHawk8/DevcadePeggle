@@ -34,7 +34,7 @@ namespace DevcadePeggle
             _graphics.ApplyChanges();
 
             // Launcher Initialization
-            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 50);
+            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2460);
             launcher = new Launcher(launcherPosition);
 
             base.Initialize();
@@ -55,6 +55,7 @@ namespace DevcadePeggle
             {
                 Exit();
             }
+            launcher.Update(gameTime);
 
             // Update game logic here
 

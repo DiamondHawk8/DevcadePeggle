@@ -13,9 +13,9 @@ public class Launcher
     private const float MinAngle = -MathHelper.PiOver2; // -90 degrees
 
     // Textures to represent state of the launcher
-    private Texture2D loadedTexture;
-    private Texture2D unloadedTexture;
-    private Texture2D currentTexture; // This will point to the texture currently being used.
+    public Texture2D loadedTexture;
+    public Texture2D unloadedTexture;
+    public Texture2D currentTexture; // This will point to the texture currently being used.
 
     // Ball object reference for use in FireBall method
     private Ball ball;
@@ -68,13 +68,14 @@ public class Launcher
             isFiring = false; // Reset firing state when space is released
         }
 
-
+        /*
         //debug code for determining good launch speeds
         if (kstate.IsKeyDown(Keys.Up))
             this.launchSpeed -= 0.5f;
         else if (kstate.IsKeyDown(Keys.Down))
             this.launchSpeed += 0.5f;
         System.Diagnostics.Debug.WriteLine("Current launch speed: " + this.launchSpeed);
+        */
     }
 
 
@@ -97,15 +98,15 @@ public class Launcher
         public void FireBall()
         {
             // Prevent firing if a ball is already active
-            //if (ball.IsActive) return;
+            if (ball.IsActive) return;
 
-            // Swap texture between loaded and unloaded states
-            currentTexture = (currentTexture == loadedTexture) ? unloadedTexture : loadedTexture;
+        // Swap texture between loaded and unloaded states
+        currentTexture = (currentTexture == loadedTexture) ? unloadedTexture : loadedTexture;
 
-            // Define launch speed and launcher length
+        // Define launch speed and launcher length
 
 
-            Vector2 ballStartPosition = new Vector2(
+        Vector2 ballStartPosition = new Vector2(
                 Position.X + (float)Math.Cos(Angle + MathHelper.PiOver2) * this.launcherLength,
                 Position.Y + (float)Math.Sin(Angle + MathHelper.PiOver2) * this.launcherLength
             );
@@ -130,7 +131,8 @@ public class Launcher
 
             ball.IsActive = true; // Mark the ball as active
         }
-
+        
+   
 
     }
 

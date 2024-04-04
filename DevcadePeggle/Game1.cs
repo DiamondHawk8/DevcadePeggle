@@ -15,7 +15,9 @@ namespace DevcadePeggle
 
         private Launcher launcher;
         private Ball ball;
-        
+
+        public static int screenWidth = 1080;
+        public static int screenHeight = 2560;
 
         public Game1()
         {
@@ -29,23 +31,29 @@ namespace DevcadePeggle
             Input.Initialize(); // Initialize input, remove if unused
 
             // Standard resolution setup for debug and release modes
-//#if DEBUG
+            //#if DEBUG
             //_graphics.PreferredBackBufferWidth = 420; // Debug mode width
             //_graphics.PreferredBackBufferHeight = 980; // Debug mode height
-//#else
-            _graphics.PreferredBackBufferWidth = 1080; // Standard width for release
-            _graphics.PreferredBackBufferHeight = 2560; // Standard height for release
-//#endif
+            //#else
+            _graphics.PreferredBackBufferWidth = screenWidth; // Standard width for release
+            _graphics.PreferredBackBufferHeight = screenHeight; // Standard height for release
+                                                                //#endif
             _graphics.ApplyChanges();
 
             // Ball Initialization
             ball = new Ball();
 
+
             // Launcher Initialization
             Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 25.6f); // y arg is set to 100
             launcher = new Launcher(launcherPosition, ball);
 
-            
+            ball.OnHitBottom = () =>
+            {
+                launcher.currentTexture = (launcher.currentTexture == launcher.loadedTexture) ? launcher.unloadedTexture : launcher.loadedTexture;
+            };
+
+
 
             base.Initialize();
         }
@@ -60,8 +68,8 @@ namespace DevcadePeggle
             // Class loading
             ball.LoadContent(Content);
             launcher.LoadContent(Content);
-            
-            
+
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -98,5 +106,8 @@ namespace DevcadePeggle
             return kbState.IsKeyDown(Keys.Escape) ||
                    (Input.GetButton(1, Input.ArcadeButtons.Menu) && Input.GetButton(2, Input.ArcadeButtons.Menu));
         }
+
+
+
     }
 }

@@ -83,7 +83,7 @@ public class Launcher
             currentTexture = loadedTexture;
         }
 
-        float launchSpeed = 20f; 
+        float launchSpeed = 50f; 
         ball.Velocity = new Vector2((float)Math.Cos(this.Angle) * launchSpeed, (float)Math.Sin(this.Angle) * launchSpeed);
         ball.Position = this.Position; 
         ball.IsActive = true;

@@ -58,8 +58,9 @@ namespace DevcadePeggle
             backgroundTexture = Content.Load<Texture2D>("TempBG");
 
             // Class loading
-            launcher.LoadContent(Content);
             ball.LoadContent(Content);
+            launcher.LoadContent(Content);
+            
             
         }
 
@@ -69,9 +70,10 @@ namespace DevcadePeggle
             {
                 Exit();
             }
+
             launcher.Update(gameTime);
 
-            // Update game logic here
+            ball.Update(gameTime);
 
             base.Update(gameTime);
         }

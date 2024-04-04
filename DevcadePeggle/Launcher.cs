@@ -20,6 +20,8 @@ public class Launcher
     // Ball object reference for use in FireBall method
     private Ball ball;
 
+    // Bool to prevent double firing
+    private bool isFiring = false;
 
     private float scale = 0.5f; // Scale factor for the launcher texture
 
@@ -48,13 +50,18 @@ public class Launcher
         else if (kstate.IsKeyDown(Keys.Right))
             Angle += 0.05f; // Rotate clockwise
 
-        // Ensure the launcher angle stays within bounds
+        // Clamp the angle within allowed bounds
         Angle = MathHelper.Clamp(Angle, MinAngle, MaxAngle);
 
-        if (kstate.IsKeyDown(Keys.Space)) // Assuming space bar is used to fire
+        // Handle firing logic
+        if (kstate.IsKeyDown(Keys.Space) && !isFiring)
         {
             FireBall();
-            // Include logic to "fire" the ball here.
+            isFiring = true;
+        }
+        else if (kstate.IsKeyUp(Keys.Space))
+        {
+            isFiring = false; // Reset firing state when space is released
         }
     }
 
@@ -67,26 +74,35 @@ public class Launcher
     }
 
 
-        
-    
+
+
     public void FireBall()
     {
-        if (ball.IsActive) return; // Prevent firing if a ball is already active
+        // Prevent firing if a ball is already active
+        if (ball.IsActive) return;
 
-        // swaps texture
-        if (currentTexture == loadedTexture)
-        {
-            currentTexture = unloadedTexture;
-        }
-        else
-        {
-            currentTexture = loadedTexture;
-        }
+        // Swap texture between loaded and unloaded states
+        currentTexture = (currentTexture == loadedTexture) ? unloadedTexture : loadedTexture;
 
-        float launchSpeed = 50f; 
-        ball.Velocity = new Vector2((float)Math.Cos(this.Angle) * launchSpeed, (float)Math.Sin(this.Angle) * launchSpeed);
-        ball.Position = this.Position; 
-        ball.IsActive = true;
+        // Define launch speed and launcher length
+        float launchSpeed = 500f; // Speed of the ball at launch
+        float launcherLength = 100f; // Distance from launcher's base to tip
+
+        // Calculate starting position of the ball at the launcher's tip
+        Vector2 ballStartPosition = new Vector2(
+            Position.X + (float)Math.Cos(Angle) * launcherLength,
+            Position.Y + (float)Math.Sin(Angle) * launcherLength
+        );
+
+        // Set ball's initial position and velocity
+        ball.Position = ballStartPosition;
+        ball.Velocity = new Vector2(
+            (float)Math.Cos(Angle) * launchSpeed,
+            (float)Math.Sin(Angle) * launchSpeed
+        );
+
+        ball.IsActive = true; // Mark the ball as active
     }
+
 }
 

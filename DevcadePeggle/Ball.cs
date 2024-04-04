@@ -12,7 +12,7 @@ public class Ball
     public bool IsActive { get; set; } // Whether the ball is currently active
 
     private Texture2D texture;
-    private float scale = 0.4f; // Scale factor for the ball texture
+    private float scale = 0.15f; // Scale factor for the ball texture
     private float gravity = 0f; // placeholder
     public Ball()
     {

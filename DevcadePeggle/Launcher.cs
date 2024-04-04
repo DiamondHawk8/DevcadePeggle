@@ -86,7 +86,7 @@ public class Launcher
 
         // Define launch speed and launcher length
         float launchSpeed = 500f; // Speed of the ball at launch
-        float launcherLength = 100f; // Distance from launcher's base to tip
+        float launcherLength = 0f; // Distance from launcher's base to tip
 
         // Calculate starting position of the ball at the launcher's tip
         Vector2 ballStartPosition = new Vector2(
@@ -96,11 +96,31 @@ public class Launcher
 
         // Set ball's initial position and velocity
         ball.Position = ballStartPosition;
-        ball.Velocity = new Vector2(
-            (float)Math.Cos(Angle) * launchSpeed,
-            (float)Math.Sin(Angle) * launchSpeed
-        );
 
+        if (Angle > 0)
+        {
+            ball.Velocity = new Vector2(
+                -(float)Math.Cos(Angle) * launchSpeed,
+                (float)Math.Sin(Angle) * launchSpeed
+            );
+        }
+        else
+        {
+            ball.Velocity = new Vector2(
+            (float)Math.Cos(Angle) * launchSpeed,
+            -(float)Math.Sin(Angle) * launchSpeed
+        );
+        }
+
+        ///
+        /// ok it still isnt working, lets think about this logically, 
+        /// the bounded area is -pi/2 to pi/2 (180 deg of motion) at -pi/2,
+        /// at launch the ball should theoretically have its X coordinate moving to the left (decreasing) 
+        /// and its y coordinate not moving at all (lets ignore gravity for now).
+        /// at 0, its y coordinate should be moving down (increasing) and X coordinate not moving at all, 
+        /// at pi/2, at launch the ball should theoretically have its X coordinate moving to the right(increasing) and its y coordinate not moving at all,
+        /// with all thing in mind, try to figure out how this relates to the different triganomic functions and rewrite the angle logic
+        ///
         ball.IsActive = true; // Mark the ball as active
     }
 

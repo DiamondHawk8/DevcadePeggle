@@ -25,6 +25,10 @@ public class Launcher
 
     private float scale = 0.5f; // Scale factor for the launcher texture
 
+    private float launchSpeed = 640f; // Speed of the ball at launch (just kinda eyeballed it)
+    private float launcherLength = 85f; // Distance from launcher's base to tip
+
+
     public Launcher(Vector2 position, Ball ball)
     {
         Position = position;
@@ -63,60 +67,73 @@ public class Launcher
         {
             isFiring = false; // Reset firing state when space is released
         }
+
+
+        //debug code for determining good launch speeds
+        if (kstate.IsKeyDown(Keys.Up))
+            this.launchSpeed -= 0.5f;
+        else if (kstate.IsKeyDown(Keys.Down))
+            this.launchSpeed += 0.5f;
+        System.Diagnostics.Debug.WriteLine("Current launch speed: " + this.launchSpeed);
     }
+
+
+
+
+
+
 
     public void Draw(SpriteBatch spriteBatch)
-    {
-        // Define the origin for rotation around the bottom center of the texture
-        Vector2 origin = new Vector2(currentTexture.Width / 2, currentTexture.Height / 2);
-        // Draw the launcher with rotation and scaling
-        spriteBatch.Draw(currentTexture, Position, null, Color.White, Angle, origin, scale, SpriteEffects.None, 0f);
+        {
+            // Define the origin for rotation around the bottom center of the texture
+            Vector2 origin = new Vector2(currentTexture.Width / 2, currentTexture.Height / 2);
+            // Draw the launcher with rotation and scaling
+            spriteBatch.Draw(currentTexture, Position, null, Color.White, Angle, origin, scale, SpriteEffects.None, 0f);
+        }
+
+
+
+
+        public void FireBall()
+        {
+            // Prevent firing if a ball is already active
+            //if (ball.IsActive) return;
+
+            // Swap texture between loaded and unloaded states
+            currentTexture = (currentTexture == loadedTexture) ? unloadedTexture : loadedTexture;
+
+            // Define launch speed and launcher length
+
+
+            Vector2 ballStartPosition = new Vector2(
+                Position.X + (float)Math.Cos(Angle + MathHelper.PiOver2) * this.launcherLength,
+                Position.Y + (float)Math.Sin(Angle + MathHelper.PiOver2) * this.launcherLength
+            );
+
+            // Set ball's initial position and velocity
+            ball.Position = ballStartPosition;
+
+            Vector2 ballStartVelocity = new Vector2(
+               (float)Math.Cos(Angle + MathHelper.PiOver2) * this.launchSpeed,
+               (float)Math.Sin(Angle + MathHelper.PiOver2) * this.launchSpeed
+            );
+
+
+            /*
+            System.Diagnostics.Debug.WriteLine("The X value is the cos of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) + "]");
+            System.Diagnostics.Debug.WriteLine("The Y Value is the sin of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Sin(Angle + MathHelper.PiOver2) + "]");
+            System.Diagnostics.Debug.WriteLine("The final vector is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) * launchSpeed + "," + (float)Math.Sin(Angle + MathHelper.PiOver2) * launchSpeed + "]");
+            System.Diagnostics.Debug.WriteLine("--------------");
+            */
+
+            ball.Velocity = ballStartVelocity;
+
+            ball.IsActive = true; // Mark the ball as active
+        }
+
+
     }
 
-
-
-
-    public void FireBall()
-    {
-        // Prevent firing if a ball is already active
-        //if (ball.IsActive) return;
-
-        // Swap texture between loaded and unloaded states
-        currentTexture = (currentTexture == loadedTexture) ? unloadedTexture : loadedTexture;
-
-        // Define launch speed and launcher length
-
-        float launchSpeed = 200f; // Speed of the ball at launch
-        float launcherLength = 85f; // Distance from launcher's base to tip
-
-        Vector2 ballStartPosition = new Vector2(
-            Position.X + (float)Math.Cos(Angle + MathHelper.PiOver2) * launcherLength,
-            Position.Y + (float)Math.Sin(Angle + MathHelper.PiOver2) * launcherLength
-        );
-
-        // Set ball's initial position and velocity
-        ball.Position = ballStartPosition;
-
-        Vector2 ballStartVelocity = new Vector2(
-           (float)Math.Cos(Angle + MathHelper.PiOver2) * launchSpeed,
-           (float)Math.Sin(Angle + MathHelper.PiOver2) * launchSpeed
-        );
-
-
-        /*
-        System.Diagnostics.Debug.WriteLine("The X value is the cos of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) + "]");
-        System.Diagnostics.Debug.WriteLine("The Y Value is the sin of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Sin(Angle + MathHelper.PiOver2) + "]");
-        System.Diagnostics.Debug.WriteLine("The final vector is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) * launchSpeed + "," + (float)Math.Sin(Angle + MathHelper.PiOver2) * launchSpeed + "]");
-        System.Diagnostics.Debug.WriteLine("--------------");
-        */
-
-       ball.Velocity = ballStartVelocity;
-
-        ball.IsActive = true; // Mark the ball as active
-    }
-
-  
-    }
 
 
 

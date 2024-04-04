@@ -13,7 +13,7 @@ public class Ball
 
     private Texture2D texture;
     private float scale = 0.15f; // Scale factor for the ball texture
-    private float gravity = 0f; // placeholder
+    private float gravity = 500f; // subject to change
     public Ball()
     {
         Position = Vector2.Zero;

@@ -45,9 +45,9 @@ public class Launcher
         var kstate = Keyboard.GetState();
 
         // Adjust launcher angle based on input
-        if (kstate.IsKeyDown(Keys.Left))
+        if (kstate.IsKeyDown(Keys.Right))
             Angle -= 0.05f; // Rotate counter-clockwise
-        else if (kstate.IsKeyDown(Keys.Right))
+        else if (kstate.IsKeyDown(Keys.Left))
             Angle += 0.05f; // Rotate clockwise
 
         // Clamp the angle within allowed bounds
@@ -97,32 +97,34 @@ public class Launcher
         // Set ball's initial position and velocity
         ball.Position = ballStartPosition;
 
-        if (Angle > 0)
-        {
-            ball.Velocity = new Vector2(
-                -(float)Math.Cos(Angle) * launchSpeed,
-                (float)Math.Sin(Angle) * launchSpeed
-            );
-        }
-        else
-        {
-            ball.Velocity = new Vector2(
-            (float)Math.Cos(Angle) * launchSpeed,
-            -(float)Math.Sin(Angle) * launchSpeed
-        );
-        }
-
-        ///
-        /// ok it still isnt working, lets think about this logically, 
-        /// the bounded area is -pi/2 to pi/2 (180 deg of motion) at -pi/2,
-        /// at launch the ball should theoretically have its X coordinate moving to the left (decreasing) 
-        /// and its y coordinate not moving at all (lets ignore gravity for now).
-        /// at 0, its y coordinate should be moving down (increasing) and X coordinate not moving at all, 
-        /// at pi/2, at launch the ball should theoretically have its X coordinate moving to the right(increasing) and its y coordinate not moving at all,
-        /// with all thing in mind, try to figure out how this relates to the different triganomic functions and rewrite the angle logic
-        ///
+        UpdateVelocityBasedOnAngle();
         ball.IsActive = true; // Mark the ball as active
     }
 
+    public void UpdateVelocityBasedOnAngle()
+    {
+        float launchSpeed = 500f; 
+
+        // Directly down
+        if (Angle == 0)
+        {
+            ball.Velocity = new Vector2(0, launchSpeed); 
+        }
+        // Angles less than 0 (right side)
+        else if (Angle < 0)
+        {
+            ball.Velocity = new Vector2(-launchSpeed, 0);
+        }
+        // Directly to the left
+        else if (Angle > 0)
+        {
+            ball.Velocity = new Vector2(launchSpeed, 0); 
+        }
+
+    }
+
+
 }
+
+
 

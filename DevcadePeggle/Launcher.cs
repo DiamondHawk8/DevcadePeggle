@@ -79,29 +79,40 @@ public class Launcher
     public void FireBall()
     {
         // Prevent firing if a ball is already active
-        if (ball.IsActive) return;
+        //if (ball.IsActive) return;
 
         // Swap texture between loaded and unloaded states
         currentTexture = (currentTexture == loadedTexture) ? unloadedTexture : loadedTexture;
 
         // Define launch speed and launcher length
-        float launchSpeed = 500f; // Speed of the ball at launch
-        float launcherLength = 0f; // Distance from launcher's base to tip
 
-        // Calculate starting position of the ball at the launcher's tip
+        float launchSpeed = 200f; // Speed of the ball at launch
+        float launcherLength = 10f; // Distance from launcher's base to tip
+
+        // MOVE THIS TO UPDATEBASEDONANGLE
         Vector2 ballStartPosition = new Vector2(
-            Position.X + (float)Math.Cos(Angle) * launcherLength,
-            Position.Y + (float)Math.Sin(Angle) * launcherLength
+            Position.X + (float)Math.Cos(Angle + MathHelper.PiOver2) * launcherLength,
+            Position.Y + (float)Math.Sin(Angle + MathHelper.PiOver2) * launcherLength
         );
 
         // Set ball's initial position and velocity
         ball.Position = ballStartPosition;
 
-        UpdateVelocityBasedOnAngle();
+        Vector2 ballStartVelocity = new Vector2(
+           (float)Math.Cos(Angle + MathHelper.PiOver2) * launchSpeed,
+           (float)Math.Sin(Angle + MathHelper.PiOver2) * launchSpeed
+        );
+        System.Diagnostics.Debug.WriteLine("The X value is the cos of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) + "]");
+        System.Diagnostics.Debug.WriteLine("The Y Value is the sin of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Sin(Angle + MathHelper.PiOver2) + "]");
+        System.Diagnostics.Debug.WriteLine("The final vector is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) * launchSpeed + "," + (float)Math.Sin(Angle + MathHelper.PiOver2) * launchSpeed + "]");
+        System.Diagnostics.Debug.WriteLine("--------------");
+
+       ball.Velocity = ballStartVelocity;
+
         ball.IsActive = true; // Mark the ball as active
     }
 
-    public void UpdateVelocityBasedOnAngle()
+    public void UpdateBasedOnAngle()
     {
         float launchSpeed = 500f; 
 

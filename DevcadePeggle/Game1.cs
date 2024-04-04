@@ -29,20 +29,20 @@ namespace DevcadePeggle
             Input.Initialize(); // Initialize input, remove if unused
 
             // Standard resolution setup for debug and release modes
-#if DEBUG
-            _graphics.PreferredBackBufferWidth = 420; // Debug mode width
-            _graphics.PreferredBackBufferHeight = 980; // Debug mode height
-#else
+//#if DEBUG
+            //_graphics.PreferredBackBufferWidth = 420; // Debug mode width
+            //_graphics.PreferredBackBufferHeight = 980; // Debug mode height
+//#else
             _graphics.PreferredBackBufferWidth = 1080; // Standard width for release
             _graphics.PreferredBackBufferHeight = 2560; // Standard height for release
-#endif
+//#endif
             _graphics.ApplyChanges();
 
             // Ball Initialization
             ball = new Ball();
 
             // Launcher Initialization
-            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height - 2460);
+            Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 25.6f); // y arg is set to 100
             launcher = new Launcher(launcherPosition, ball);
 
             

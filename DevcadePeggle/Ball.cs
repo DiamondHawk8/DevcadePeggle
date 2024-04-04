@@ -13,7 +13,7 @@ public class Ball
 
     private Texture2D texture;
     private float scale = 0.4f; // Scale factor for the ball texture
-    private float gravity = 20f; // placeholder
+    private float gravity = 0f; // placeholder
     public Ball()
     {
         Position = Vector2.Zero;
@@ -29,7 +29,9 @@ public class Ball
     public void Update(GameTime gameTime)
     {
         if (!IsActive) return;
+        //subject velocity to the effects of gravity
         Velocity = new Vector2(Velocity.X, Velocity.Y + gravity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+        //change position based on velocity
         Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 

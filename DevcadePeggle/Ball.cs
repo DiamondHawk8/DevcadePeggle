@@ -23,6 +23,7 @@ public class Ball
     private float dampingFactor = 0.95f; // How much "energy" is lost upon collision, lower values means more loss
     private float ballDiameter = 200 * scale;
 
+    //delete
     public Action OnHitBottom { get; set; }
 
 

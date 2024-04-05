@@ -48,6 +48,7 @@ namespace DevcadePeggle
             Vector2 launcherPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 25.6f); // y arg is set to 100
             launcher = new Launcher(launcherPosition, ball);
 
+            //Delegate method for ball hading colliding with the bottom
             ball.OnHitBottom = () =>
             {
                 launcher.currentTexture = (launcher.currentTexture == launcher.loadedTexture) ? launcher.unloadedTexture : launcher.loadedTexture;

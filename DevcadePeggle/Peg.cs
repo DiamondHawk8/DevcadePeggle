@@ -1,20 +1,31 @@
 // Peg.cs
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
+using System.Collections.Generic;
 
 public class Peg
 {
 
     public Vector2 Position { get; private set; }
 
+    public static Dictionary<PegType, Texture2D> pegTextures = new Dictionary<PegType, Texture2D>();
+
     private Texture2D texture;
 
-    public bool IsHit { get; private set; }
+    private PegType type;
 
-    public Peg(Vector2 position)
+    public bool IsHit { get; set; } = false;
+
+    public bool IsActive { get; set; } = true;
+
+
+
+    public Peg(Vector2 position, PegType type)
     {
         Position = position;
-        IsHit = false;
+        
+        
       
     }
 
@@ -27,4 +38,51 @@ public class Peg
     {
   
     }
+
+    public void LoadContent(ContentManager content)
+    {
+        if (pegTextures.Count == 0)
+            LoadTextures(content);
+
+    }
+    public static void LoadTextures(ContentManager content)
+    {
+        pegTextures.Add(PegType.GREEN, content.Load<Texture2D>("unlit_green_peg"));
+        pegTextures.Add(PegType.GREENL, content.Load<Texture2D>("lit_green_peg"));
+        pegTextures.Add(PegType.GREENG, content.Load<Texture2D>("glowing_green_peg"));
+        pegTextures.Add(PegType.BLUE, content.Load<Texture2D>("unlit_blue_peg"));
+        pegTextures.Add(PegType.BLUEL, content.Load<Texture2D>("lit_blue_peg"));
+        pegTextures.Add(PegType.BLUEG, content.Load<Texture2D>("glowing_blue_peg"));
+        pegTextures.Add(PegType.YELLOW, content.Load<Texture2D>("unlit_yellow_peg"));
+        pegTextures.Add(PegType.YELLOWL, content.Load<Texture2D>("lit_yellow_peg"));
+        pegTextures.Add(PegType.YELLOWG, content.Load<Texture2D>("glowing_yellow_peg"));
+        pegTextures.Add(PegType.RED, content.Load<Texture2D>("unlit_red_peg"));
+        pegTextures.Add(PegType.REDL, content.Load<Texture2D>("lit_red_peg"));
+        pegTextures.Add(PegType.REDG, content.Load<Texture2D>("glowing_red_peg"));
+        pegTextures.Add(PegType.ERROR, content.Load<Texture2D>("ball"));
+    }
+    public void switchTexture()
+    {
+        PegType type = this.type;
+
+        switch (type)
+        {
+            case PegType.GREEN:
+                this.type = PegType.GREENG;
+                break;
+            case PegType.BLUE:
+                this.type = PegType.BLUEG;
+                break;
+            case PegType.YELLOW:
+                this.type = PegType.YELLOWG;
+                break;
+            case PegType.RED:
+                this.type = PegType.REDG;
+                break;
+            default: 
+                this.type = PegType.ERROR;
+                break;
+        }
+    }
+
 }

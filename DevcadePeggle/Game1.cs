@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using Devcade;
+using Microsoft.Xna.Framework.Content;
 
 namespace DevcadePeggle
 {
@@ -11,6 +13,9 @@ namespace DevcadePeggle
         private SpriteBatch _spriteBatch;
         private Texture2D backgroundTexture; // Stores background
 
+        //testing
+        private List<Peg> Testpegs;
+
         // class instances 
 
         private Launcher launcher;
@@ -18,6 +23,8 @@ namespace DevcadePeggle
 
         public static int screenWidth = 1080;
         public static int screenHeight = 2560;
+
+        public static int score = 0;
 
         public Game1()
         {
@@ -40,8 +47,12 @@ namespace DevcadePeggle
                                                                 //#endif
             _graphics.ApplyChanges();
 
+            Peg.InitializeTextures(Content);
+
+            Testpegs = createTestList();
+
             // Ball Initialization
-            ball = new Ball();
+            ball = new Ball(Testpegs);
 
 
             // Launcher Initialization
@@ -69,7 +80,7 @@ namespace DevcadePeggle
             // Class loading
             ball.LoadContent(Content);
             launcher.LoadContent(Content);
-
+            
 
         }
 
@@ -80,11 +91,19 @@ namespace DevcadePeggle
                 Exit();
             }
 
+            foreach (var peg in Testpegs)
+            {
+                peg.Update(gameTime); // Calls the Draw method of each Peg, passing in the SpriteBatch
+            }
+
             launcher.Update(gameTime);
 
+            System.Diagnostics.Debug.WriteLine("At Ball update");
             ball.Update(gameTime);
 
             base.Update(gameTime);
+
+
         }
 
         protected override void Draw(GameTime gameTime)
@@ -94,6 +113,12 @@ namespace DevcadePeggle
             _spriteBatch.Begin();
             _spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White); // Use Vector2.Zero for drawing at origin
             launcher.Draw(_spriteBatch);
+
+            foreach (var peg in Testpegs) 
+            {
+                peg.Draw(_spriteBatch); // Calls the Draw method of each Peg, passing in the SpriteBatch
+            }
+
             ball.Draw(_spriteBatch);
             _spriteBatch.End();
 
@@ -108,7 +133,26 @@ namespace DevcadePeggle
                    (Input.GetButton(1, Input.ArcadeButtons.Menu) && Input.GetButton(2, Input.ArcadeButtons.Menu));
         }
 
+        public static List<Peg> createTestList()
+        {
+            List<Peg> pegs = new List<Peg>();
+            Vector2 startPosition = new Vector2(500, 500); // Starting position for the first peg
+            int numberOfRows = 5; // Number of rows of pegs
+            int numberOfColumns = 5; // Number of columns of pegs
+            int spacing = 100; // Space between pegs
 
+            // Populate the peg list with positions in a grid
+            for (int row = 0; row < numberOfRows; row++)
+            {
+                for (int col = 0; col < numberOfColumns; col++)
+                {
+                    Vector2 pegPosition = new Vector2(startPosition.X + col * spacing, startPosition.Y + row * spacing);
+                    Peg newPeg = new Peg(pegPosition, PegType.GREEN); 
+                    pegs.Add(newPeg);
+                }
+            }
+            return pegs;
+        }
 
     }
 }

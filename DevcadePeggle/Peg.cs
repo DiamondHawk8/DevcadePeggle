@@ -19,33 +19,38 @@ public class Peg
 
     public bool IsActive { get; set; } = true;
 
+    private static float scale = 0.15f;
+
+    public float pegRadius = (200 / 2) * scale;
 
 
     public Peg(Vector2 position, PegType type)
     {
         Position = position;
-        
-        
-      
+        texture = pegTextures[type];
     }
 
     public void Update(GameTime gameTime)
     {
-     
+      if (IsHit)
+        {
+            this.switchTexture();
+        }
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-  
+        if(!IsActive) return;
+
+        spriteBatch.Draw(texture, Position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
     }
 
     public void LoadContent(ContentManager content)
     {
-        if (pegTextures.Count == 0)
-            LoadTextures(content);
+        
 
     }
-    public static void LoadTextures(ContentManager content)
+    public static void InitializeTextures(ContentManager content)
     {
         pegTextures.Add(PegType.GREEN, content.Load<Texture2D>("unlit_green_peg"));
         pegTextures.Add(PegType.GREENL, content.Load<Texture2D>("lit_green_peg"));

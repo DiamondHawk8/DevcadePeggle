@@ -35,6 +35,8 @@ public class Peg
       if (IsHit)
         {
             this.switchTexture();
+            System.Diagnostics.Debug.WriteLine($"PEGS NEW TYPE IS: {this.type}");
+            this.texture = pegTextures[this.type];
         }
     }
 
@@ -69,7 +71,7 @@ public class Peg
     public void switchTexture()
     {
         PegType type = this.type;
-
+        System.Diagnostics.Debug.WriteLine($"TESTING WITH CASE: {type}");
         switch (type)
         {
             case PegType.GREEN:
@@ -85,7 +87,7 @@ public class Peg
                 this.type = PegType.REDG;
                 break;
             default: 
-                this.type = PegType.ERROR;
+                this.type = type;
                 break;
         }
     }

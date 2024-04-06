@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Devcade;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics;
 
 namespace DevcadePeggle
 {
@@ -97,12 +98,15 @@ namespace DevcadePeggle
             }
 
             launcher.Update(gameTime);
-
-            System.Diagnostics.Debug.WriteLine("At Ball update");
+            
             ball.Update(gameTime);
 
             base.Update(gameTime);
 
+            foreach(var peg in Testpegs)
+            {
+                peg.Update(gameTime);
+            }
 
         }
 
@@ -136,9 +140,9 @@ namespace DevcadePeggle
         public static List<Peg> createTestList()
         {
             List<Peg> pegs = new List<Peg>();
-            Vector2 startPosition = new Vector2(500, 500); // Starting position for the first peg
-            int numberOfRows = 5; // Number of rows of pegs
-            int numberOfColumns = 5; // Number of columns of pegs
+            Vector2 startPosition = new Vector2(550, 550); // Starting position for the first peg
+            int numberOfRows = 3; // Number of rows of pegs
+            int numberOfColumns = 3; // Number of columns of pegs
             int spacing = 100; // Space between pegs
 
             // Populate the peg list with positions in a grid

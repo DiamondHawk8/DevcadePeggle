@@ -120,13 +120,6 @@ public class Launcher
             );
 
 
-            /*
-            System.Diagnostics.Debug.WriteLine("The X value is the cos of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) + "]");
-            System.Diagnostics.Debug.WriteLine("The Y Value is the sin of [" + (Angle + MathHelper.PiOver2) + "], which is [" + (float)Math.Sin(Angle + MathHelper.PiOver2) + "]");
-            System.Diagnostics.Debug.WriteLine("The final vector is [" + (float)Math.Cos(Angle + MathHelper.PiOver2) * launchSpeed + "," + (float)Math.Sin(Angle + MathHelper.PiOver2) * launchSpeed + "]");
-            System.Diagnostics.Debug.WriteLine("--------------");
-            */
-
             ball.Velocity = ballStartVelocity;
 
             ball.IsActive = true; // Mark the ball as active

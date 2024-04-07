@@ -25,8 +25,8 @@ public class Ball
     // Constants:
 
     private static float scale = 0.15f; // Scale factor for the ball texture
-    private float gravity = 600f; // subject to change
-    private float dampingFactor = 0.95f; // How much "energy" is lost upon collision, lower values means more loss
+    private float gravity = 800f; // subject to change
+    private float dampingFactor = 0.9f; // How much "energy" is lost upon collision, lower values means more loss
     private float diameter = 200 * scale;
     private float radius = (200 / 2) * scale;
 
@@ -56,31 +56,19 @@ public class Ball
         if (!IsActive) return;
 
 
-        // Apply gravity to the velocity's Y component
         float velocityX = Velocity.X;
-        float velocityY = Velocity.Y + gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        float velocityY = Velocity.Y;
+
+        // Update velocity based on gravity effects and wall/ceiling collisions
+        Velocity = UpdateVelocityWithGravityAndCollisions(velocityX, velocityY, gameTime);
 
 
-        // Check for wall collision
-        if (Position.X < 0 || Position.X > Game1.screenWidth - diameter)
-        {
-            velocityX *= -1 * dampingFactor; // Invert X velocity and apply damping factor
-        }
-        if (Position.Y < 0 || Position.Y > Game1.screenHeight - diameter)
-        {
-            velocityY *= -1 * dampingFactor; // Invert Y velocity and apply damping factor
-        }
+        //ReCheckCollisionWithPegs(level.pegs);
+        ReCheckCollisionWithPegs(pegs);
 
-        // After Wall collision checks and modifications, reassign the Velocity
-        Velocity = new Vector2(velocityX, velocityY);
-
-
-
-        //CheckCollisionWithPegs(level.pegs);
-        CheckCollisionWithPegs(pegs);
         // Change position based on velocity
-        System.Diagnostics.Debug.WriteLine($"VELOCITY BEING UPDATED: {this.Velocity}");
         Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
         if (this.Position.Y > Game1.screenHeight - diameter)
         {
@@ -96,34 +84,86 @@ public class Ball
         spriteBatch.Draw(texture, Position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
     }
 
+
+    //Deprecated, do not use
     public void CheckCollisionWithPegs(List<Peg> pegs)
     {
         foreach (var peg in pegs.Where(p => p.IsActive))
         {
             float distance = Vector2.Distance(this.Position, peg.Position);
 
-            System.Diagnostics.Debug.WriteLine($"Checking collision... Distance to peg: {distance}, Required: {this.radius + peg.pegRadius}");
 
             if (distance < this.radius + peg.pegRadius) // Assuming radius is defined for both ball and peg
             {
                 peg.IsHit = true; // Deactivate the peg
 
-                System.Diagnostics.Debug.WriteLine("Collision detected with peg. Peg marked as hit.-----------------------------------------------------------------------------");
 
                 // Calculate the normal at the point of contact
                 Vector2 normal = Vector2.Normalize(this.Position - peg.Position);
-                System.Diagnostics.Debug.WriteLine($"Normal: {normal}");
+
 
                 // Calculate the dot product of the ball's velocity and the normal
                 float dotProduct = Vector2.Dot(this.Velocity, normal);
-                System.Diagnostics.Debug.WriteLine($"Dot Product: {dotProduct}");
+
 
                 // Reflect the ball's velocity vector
-                System.Diagnostics.Debug.WriteLine($"Current Velocity: {this.Velocity}");
-                this.Velocity = this.Velocity - 2 * dotProduct * normal;
-                System.Diagnostics.Debug.WriteLine($"New Velocity: {this.Velocity}");
+                this.Velocity = this.Velocity - 2 * dotProduct * normal * dampingFactor;
+
             }
         }
+
+
+      
+    }
+
+
+    public void ReCheckCollisionWithPegs(List<Peg> pegs)
+    {
+        foreach (var peg in pegs.Where(p => p.IsActive))
+        {
+            float distance = Vector2.Distance(this.Position, peg.Position);
+            float overlap = this.radius + peg.pegRadius - distance;
+
+            if (overlap > 0) // Collision detected
+            {
+                peg.IsHit = true;
+                // Calculate the normal at the point of contact
+                Vector2 normal = Vector2.Normalize(this.Position - peg.Position);
+
+                // Reflect the ball's velocity vector
+                float dotProduct = Vector2.Dot(this.Velocity, normal);
+                this.Velocity = this.Velocity - 2 * dotProduct * normal * dampingFactor;
+
+                // Reposition the ball to ensure it's not intersecting with the peg
+                this.Position += normal * overlap;
+            }
+        }
+    }
+
+
+    public Vector2 UpdateVelocityWithGravityAndCollisions(float velocityX, float velocityY, GameTime gameTime)
+    {
+        float screenRightBoundary = Game1.screenWidth - diameter;
+        float screenTopBoundary = 0; // Ceiling
+
+        // Apply gravity to Y velocity before checking collisions
+        velocityY += gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        // Check for wall collisions (left and right)
+        if (Position.X < 0 || Position.X > screenRightBoundary)
+        {
+            velocityX *= -1 * dampingFactor; // Invert X velocity and apply damping factor
+            Position = new Vector2(MathHelper.Clamp(Position.X, 0, screenRightBoundary), Position.Y);
+        }
+
+        // Check for ceiling collision
+        if (Position.Y < screenTopBoundary)
+        {
+            velocityY *= -1 * dampingFactor; // Invert Y velocity and apply damping factor
+            Position = new Vector2(Position.X, screenTopBoundary);
+        }
+
+        return new Vector2(velocityX, velocityY);
     }
 
 
